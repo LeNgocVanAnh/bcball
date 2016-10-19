@@ -3,7 +3,12 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -24,6 +29,7 @@ public class BouncingBall extends JFrame {
 	Color[] ballColorArray = { Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.GRAY, Color.PINK, Color.BLACK };
 	Color ballColor = Color.BLACK;
 	
+	int mouseX = 0, mouseY =0;
 	public BouncingBall() {
 		canvas = new DrawingCanvas();
 		canvas.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -33,7 +39,22 @@ public class BouncingBall extends JFrame {
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-
+		//Mouse Motion listener
+		this.addMouseMotionListener(new MouseMotionListener() {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				
+				
+			}
+		});
+		//Repeated task
 		ActionListener updateTask = new ActionListener() {
 
 			@Override
@@ -51,8 +72,9 @@ public class BouncingBall extends JFrame {
 				repaint();
 			}
 		};
-
+		//Timer
 		Timer timer = new Timer(UPDATETIME, updateTask);
+		//Start the timer
 		timer.start();
 	}
 
@@ -83,8 +105,12 @@ public class BouncingBall extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			setBackground(Color.WHITE);
+			//Ball
 			g.setColor(ballColor);
 			g.fillOval(x, y, size, size);
+			//Mouse trail
+			g.setColor(Color.RED);
+			g.fillOval(mouseX-10, mouseY-10, 20, 20);
 		}
 	}
 }
